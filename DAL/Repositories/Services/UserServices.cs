@@ -133,21 +133,18 @@ namespace DAL.Repositories.Services
         {
             try
             {
-                // Cari user berdasarkan ID
                 var user = await _context.MstUsers.FindAsync(Id);
                 if (user == null)
                 {
                     throw new Exception("User not found");
                 }
 
-                // Update properti user
                 user.Id = Id;
                 user.Name = updateUser.Name;
                 user.Email = updateUser.Email;
                 user.Role = updateUser.Role;
                 user.Balance = updateUser.Balance;
 
-                // Simpan perubahan ke database
                 _context.MstUsers.Update(user);
                 await _context.SaveChangesAsync();
 
@@ -155,7 +152,6 @@ namespace DAL.Repositories.Services
             }
             catch (Exception ex)
             {
-                // Tangani kesalahan
                 throw new Exception("An error occurred while updating the user: " + ex.Message);
             }
         }
