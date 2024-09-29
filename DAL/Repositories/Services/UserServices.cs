@@ -26,19 +26,18 @@ namespace DAL.Repositories.Services
             _configuration = configuration;
         }
 
-        // Register method
         public async Task<string> Register(ReqRegisterUserDto register)
         {
             try
             {
-                // Check if the email is already in use
+                
                 var isAnyEmail = await _context.MstUsers.SingleOrDefaultAsync(e => e.Email == register.Email);
                 if (isAnyEmail != null)
                 {
                     throw new Exception("email already used");
                 }
 
-                // Create a new user
+               
                 var newUser = new MstUser
                 {
                     Name = register.Name,
@@ -48,7 +47,7 @@ namespace DAL.Repositories.Services
                     Balance = register.Balance,
                 };
 
-                // Add user to the database
+               
                 await _context.MstUsers.AddAsync(newUser);
                 await _context.SaveChangesAsync();
 
@@ -56,7 +55,7 @@ namespace DAL.Repositories.Services
             }
             catch (Exception ex)
             {
-                // Log the exception or handle it as needed
+                
                 throw new Exception("An error occurred while registering the user: " + ex.Message);
             }
         }
@@ -95,7 +94,9 @@ namespace DAL.Repositories.Services
 
             var loginResponse = new ResLoginDto
             {
+                Id = user.Id,
                 Token = token,
+                Role = user.Role
             };
 
             return loginResponse;
@@ -128,7 +129,7 @@ namespace DAL.Repositories.Services
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        //Update Method
+        // Update Method
         public async Task<string> UpdateUser(ReqUpdateUserDto updateUser, string Id)
         {
             try
@@ -139,9 +140,8 @@ namespace DAL.Repositories.Services
                     throw new Exception("User not found");
                 }
 
-                user.Id = Id;
+                
                 user.Name = updateUser.Name;
-                user.Email = updateUser.Email;
                 user.Role = updateUser.Role;
                 user.Balance = updateUser.Balance;
 
@@ -156,6 +156,7 @@ namespace DAL.Repositories.Services
             }
         }
 
+        // Delete Method
         public async Task<ResDeleteDto> Delete(string id)
         {
             var user = await _context.MstUsers.SingleOrDefaultAsync(e => e.Id == id);
@@ -174,5 +175,20 @@ namespace DAL.Repositories.Services
 
         }
 
+        //Get Id Method
+        public async Task<ResGetUserIdDto> GetUserId(string Id)
+        {
+            return await _context.MstUsers
+                .Where(user => user.Id == Id)
+                .Select(user => new ResGetUserIdDto
+                {
+                    Id = user.Id,
+                    Name = user.Name,
+                    Role = user.Role,
+                    Balance = user.Balance,
+                }).SingleOrDefaultAsync();
+        }
+
+        
     }
 }

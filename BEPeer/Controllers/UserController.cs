@@ -20,7 +20,6 @@ namespace BEPeer.Controllers
             _userServices = userServices;
         }
 
-        // Register method (as you provided)
         [HttpPost]
         //[Authorize(Roles = "admin")]
         public async Task<IActionResult> Register(ReqRegisterUserDto register)
@@ -188,6 +187,35 @@ namespace BEPeer.Controllers
                 });
             }
         }
+
+        //Get users by Id
+        [HttpGet]
+        public async Task<IActionResult> GetUserId(string Id)
+        {
+            try
+            {
+                var users = await _userServices.GetUserId(Id);
+
+                return Ok(new ResBaseDto<ResGetUserIdDto>
+                {
+                    Success = true,
+                    Message = "Berhasil menampilkan data Id",
+                    Data = users
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResBaseDto<ResGetUserIdDto>
+                {
+                    Success = false,
+                    Message = ex.Message,
+                    Data = null
+                });
+            }
+            return Ok(new ResBaseDto<ResGetUserIdDto>());
+
+        }
+
 
     }
 }

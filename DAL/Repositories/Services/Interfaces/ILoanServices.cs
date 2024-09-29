@@ -12,9 +12,8 @@ namespace DAL.Repositories.Services.Interfaces
     {
         Task<string> CreateLoan(ReqLoanDto loan);
         Task<string> UpdateLoan(ReqUpdateLoanDto updateLoanDto, string Id);
-
-        Task<List<ResListLoanDto>> LoanList(string status = "");
-
+        Task<List<ResListLoanDto>> GetLoanList(string status = "");
+        Task<List<ResListLoanDto>> GetRequestedLoans();
     }
 
 

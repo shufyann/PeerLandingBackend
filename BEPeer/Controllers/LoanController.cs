@@ -17,7 +17,6 @@ namespace BEPeer.Controllers
             _loanServices = loanServices;
         }
 
-
         [HttpPost]
         public async Task<IActionResult> NewLoan(ReqLoanDto loan)
         {
@@ -100,7 +99,7 @@ namespace BEPeer.Controllers
         {
             try 
             {
-                var result = await _loanServices.LoanList(status);
+                var result = await _loanServices.GetLoanList(status);
 
                 return Ok(new ResBaseDto<object>
                 {
@@ -120,5 +119,14 @@ namespace BEPeer.Controllers
                 });
             }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetRequestedLoans()
+        {
+            var loans = await _loanServices.GetLoanList("requested"); 
+            return Ok(loans);
+        }
+
+
     }
 }
